@@ -168,6 +168,8 @@ def _process_batch(sess, original_images, semantic_predictions, image_names,
     semantic_prediction = np.squeeze(semantic_predictions[i])
     crop_semantic_prediction = semantic_prediction[:image_height, :image_width]
 
+    tf.logging.info('sum of semantic_prediction: %s ', np.sum(semantic_prediction))
+
     # Save image.
     save_annotation.save_annotation(
         original_image, save_dir, _IMAGE_FORMAT % (image_id_offset + i),

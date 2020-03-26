@@ -1,5 +1,9 @@
 #deeplab projects dataset
-research/deeplab/datasets/**/*
+research/deeplab/datasets/**/
+
+#vscode
+.vscode/
+**/.vscode/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

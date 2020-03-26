@@ -117,10 +117,10 @@ python "${WORK_DIR}"/train.py \
   --label_weights=1 \
   --label_weights=1 \
   --label_weights=1 \
-  --label_weights=35 \
+  --label_weights=30 \
   --label_weights=35 \
   --label_weights=20 \
-  --label_weights=20 \
+  --label_weights=15 \
   --label_weights=25 \
   --label_weights=50
 

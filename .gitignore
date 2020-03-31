@@ -1,5 +1,6 @@
 #deeplab projects dataset
 research/deeplab/datasets/**/
+research/safety-loads/
 
 #vscode
 .vscode/

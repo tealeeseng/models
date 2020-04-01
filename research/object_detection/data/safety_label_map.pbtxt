@@ -1,0 +1,51 @@
+item {
+  name: "worker"
+  id: 1
+}
+item {
+  name: "concrete casting bucket"
+  id: 2 
+}
+item {
+  name: "concrete bucket"
+  id: 2 
+}
+item {
+  name: "concrete_casting_bucket"
+  id: 2 
+}
+
+item {
+  name: "household shelter"
+  id: 3
+}
+item {
+  name: "precast plank"
+  id: 4
+}
+item {
+  name: "window facade"
+  id: 5
+}
+
+item {
+  name: "wall"
+  id: 6
+}
+item {
+  name: "staircase wall"
+  id: 7
+}
+item {
+  name: "parapet wall"
+  id: 8
+}
+item {
+  name: "toilet wall"
+  id: 9 
+}
+item {
+  name: "column + gable end wall"
+  id: 10 
+}
+

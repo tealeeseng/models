@@ -1,7 +1,9 @@
 #deeplab projects dataset
 research/deeplab/datasets/**/
 research/safety-loads/
+research/full-safety-loads/
 research/object_detection/protos/
+
 
 #vscode
 .vscode/

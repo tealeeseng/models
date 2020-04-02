@@ -31,6 +31,10 @@ export CUDA_VISIBLE_DEVICES="0"
 # export TF_ENABLE_AUTO_MIXED_PRECISION=1
 # export TF_ENABLE_AUTO_MIXED_PRECISION_GRAPH_REWRITE=1
 # export TF_ENABLE_AUTO_MIXED_PRECISION_LOSS_SCALING=1
+## also enable_mixed_precision_graph_rewrite line in train.py
+
+## XLA introduces error. libdevice not found at ./libdevice.10.bc
+# export TF_XLA_FLAGS=--tf_xla_auto_jit=2
 
 # Train 10 iterations.
 NUM_ITERATIONS=1000
@@ -94,6 +98,8 @@ rm -fr /home/leeseng/Projects/iss/BuildingLab/tensorflow/models/research/deeplab
 
 # Train 10 iterations.
 # NUM_ITERATIONS=10000
+  # --num_clones=2 \
+  # --num_readers=4 \
 
 python "${WORK_DIR}"/train.py \
   --logtostderr \
@@ -118,9 +124,9 @@ python "${WORK_DIR}"/train.py \
   --label_weights=1 \
   --label_weights=1 \
   --label_weights=30 \
-  --label_weights=35 \
+  --label_weights=25 \
   --label_weights=20 \
-  --label_weights=15 \
+  --label_weights=10 \
   --label_weights=25 \
   --label_weights=50
 

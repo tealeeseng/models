@@ -50,7 +50,7 @@ WORK_DIR="${CURRENT_DIR}/deeplab"
 DATASET_DIR="datasets"
 cd "${WORK_DIR}/${DATASET_DIR}"
 #sh download_and_convert_voc2012.sh
-sh prepare_safety.sh
+# sh prepare_safety.sh
 
 # Go back to original directory.
 cd "${CURRENT_DIR}"
@@ -87,7 +87,7 @@ PASCAL_DATASET="${WORK_DIR}/${DATASET_DIR}/${PASCAL_FOLDER}/tfrecord"
 # rm -fr /home/leeseng/Projects/iss/BuildingLab/tensorflow/models/research/deeplab/datasets/safety/exp/train_on_trainval_set/train/*
 
 # Train 10 iterations.
-NUM_ITERATIONS=400
+NUM_ITERATIONS=1000
 
 #python "${WORK_DIR}"/train.py \
 #  --logtostderr \
@@ -131,6 +131,7 @@ NUM_ITERATIONS=400
 #  --max_number_of_evaluations=1
 
 # Visualize the results.
+
 python "${WORK_DIR}"/vis.py \
   --logtostderr \
   --vis_split="val" \
@@ -140,14 +141,12 @@ python "${WORK_DIR}"/vis.py \
   --atrous_rates=18 \
   --output_stride=16 \
   --decoder_output_stride=4 \
-  --vis_crop_size=1080 \
-  --vis_crop_size=1920 \
+  --vis_crop_size=1081,1921 \
   --dataset="safety" \
   --checkpoint_dir="${TRAIN_LOGDIR}" \
   --vis_logdir="${VIS_LOGDIR}" \
   --dataset_dir="${PASCAL_DATASET}" \
   --max_number_of_iterations=1
-
 # Export the trained checkpoint.
 
 #CKPT_PATH="${TRAIN_LOGDIR}/model.ckpt-${NUM_ITERATIONS}"

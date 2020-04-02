@@ -384,6 +384,10 @@ def main(unused_argv):
       else:
         raise ValueError('Unknown optimizer')
 
+      # enable auto mixed precision for RTX
+      # optimizer = tf.train.experimental.enable_mixed_precision_graph_rewrite(optimizer)
+
+
     if FLAGS.quantize_delay_step >= 0:
       if FLAGS.num_clones > 1:
         raise ValueError('Quantization doesn\'t support multi-clone yet.')

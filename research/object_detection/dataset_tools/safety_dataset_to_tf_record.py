@@ -64,7 +64,7 @@ flags.DEFINE_string('imageset_path', 'safety-loads/ImageSets', 'path to image se
 
 FLAGS = flags.FLAGS
 
-SETS = ['train', 'val']
+# SETS = ['train', 'val']
 
 def dict_to_tf_example(data,
                        dataset_directory,
@@ -126,7 +126,11 @@ def dict_to_tf_example(data,
   difficult_obj = []
   if 'object' in data:
     for obj in data['object']:
-      difficult = bool(int(obj['difficult']))
+      diff = obj.get('difficult')
+      if diff is None:
+        difficult = False
+      else:
+        difficult = bool(int(diff))
       if ignore_difficult_instances and difficult:
         continue
 
@@ -146,8 +150,18 @@ def dict_to_tf_example(data,
         continue
 
       classes.append(label_map_dict[name])
-      truncated.append(int(obj['truncated']))
-      poses.append(obj['pose'].encode('utf8'))
+      truncated_str = obj.get('truncated')
+      if truncated_str is None:
+        truncated_value = 0
+      else:
+        truncated_value = int(truncated_str)
+      truncated.append(truncated_value)
+
+      pose_str = obj.get('pose')
+      if pose_str is None:
+        pose_str = "Unspecified"
+      poses.append(pose_str.encode('utf8'))
+      # poses.append(obj['pose'].encode('utf8'))
 
   example = tf.train.Example(features=tf.train.Features(feature={
       'image/height': dataset_util.int64_feature(height),
@@ -211,17 +225,21 @@ def build_tf_record(train_list ,path, label_map_dict):
 
   writer = tf.python_io.TFRecordWriter(path)
   for idx, example in enumerate(train_list):
+    print('File, ', example)
     if idx % 100 == 0:
       print('On image %d of %d', idx, len(train_list))
 
     with tf.gfile.GFile(example, 'r') as fid:
       xml_str = fid.read()
+    # print('xml,', xml_str)
+
     xml = etree.fromstring(xml_str)
     data = dataset_util.recursive_parse_xml_to_dict(xml)['annotation']
 
     tf_example = dict_to_tf_example(data, FLAGS.data_dir, label_map_dict,
                                     FLAGS.ignore_difficult_instances)
     writer.write(tf_example.SerializeToString())
+    # break
 
   writer.close()
 

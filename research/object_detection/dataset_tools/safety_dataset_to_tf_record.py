@@ -29,6 +29,7 @@ import logging
 import os
 import glob
 import random
+import sys
 
 from lxml import etree
 import PIL.Image
@@ -50,12 +51,13 @@ flags = tf.app.flags
 #                      'difficult instances')
 # flags.DEFINE_string('imageset_path', 'object_detection\\construction_dataset\\testdataset\\ImageSets', 'path to image sets')
 
-flags.DEFINE_string('data_dir', 'safety-loads/', 'Root directory to raw PASCAL VOC dataset.')
+flags.DEFINE_string('data_dir', None, 'Root directory to raw PASCAL VOC dataset.')
 flags.DEFINE_string('set', 'JPEGImages', 'Convert training set or validation set.')
 # flags.DEFINE_string('annotations_dir', 'safety-loads/Annotations/',
                     # '(Relative) path to annotations directory.')
-flags.DEFINE_string('output_dir', 'safety-loads/', 'Path to output TFRecord')
-flags.DEFINE_string('label_map_file', 'safety-loads/safety_label_map.pbtxt',
+# flags.DEFINE_string('output_dir', 'safety-loads/', 'Path to output TFRecord')
+# 'safety-loads/safety_label_map.pbtxt'
+flags.DEFINE_string('label_map_file', None,
                     'Path to label map proto')
 flags.DEFINE_boolean('ignore_difficult_instances', False, 'Whether to ignore '
                      'difficult instances')
@@ -227,7 +229,7 @@ def build_tf_record(train_list ,path, label_map_dict):
   for idx, example in enumerate(train_list):
     print('File, ', example)
     if idx % 100 == 0:
-      print('On image %d of %d', idx, len(train_list))
+      tf.compat.v1.logging.warn('On image %d of %d', idx, len(train_list))
 
     with tf.gfile.GFile(example, 'r') as fid:
       xml_str = fid.read()
@@ -247,9 +249,16 @@ def build_tf_record(train_list ,path, label_map_dict):
 def main(_):
   
   data_dir = FLAGS.data_dir
+  label_map_file = FLAGS.label_map_file
+
+  if data_dir is None or label_map_file is None:
+    tf.compat.v1.logging.warn('Please provides dataset folder and label_map_file.')
+    tf.compat.v1.logging.warn('--data_dir=dir --label_map_file=dir/safety_label_map.pbtxt')
+    sys.exit(0)
+
   annotations_dir = os.path.join(data_dir, 'Annotations')
 
-  label_map_file = os.path.join(FLAGS.label_map_file)  
+  # label_map_file = os.path.join(FLAGS.label_map_file)  
   label_map_dict = label_map_util.get_label_map_dict(label_map_file)
 
   examples_list = glob.glob(os.path.join(annotations_dir, '*.xml'))
@@ -273,8 +282,5 @@ def main(_):
 
 
 
-
-
-
 if __name__ == '__main__':
-  tf.app.run()
+  tf.compat.v1.app.run()

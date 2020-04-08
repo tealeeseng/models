@@ -3,6 +3,7 @@ import random
 import os
 import glob
 import shutil
+import sys
 
 # for sampling size percentage. To facilitate growing dataset in view of Active Learning process.
 PERCENTAGE = 0.01
@@ -15,14 +16,23 @@ flags = tf.app.flags
 
 flags.DEFINE_string('data_dir', 'full-safety-loads/',
                     'full dataset for PASCAL VOC dataset format.')
-flags.DEFINE_string('sample_output_dir', 'safety-loads/',
-                    'small sample dataset for PASCAL VOC dataset format.')
+flags.DEFINE_string('samples_output_dir', None,
+                    'smaller samples dataset for PASCAL VOC dataset format.')
 
 
 FLAGS = flags.FLAGS
 
 
 def main(_):
+
+    samples_output_dir = FLAGS.samples_output_dir
+
+
+    if samples_output_dir is None:
+        tf.compat.v1.logging.warn('Please provides full dataset folders for samplings. ')
+        tf.compat.v1.logging.warn('--data_dir=object_detection/full-safety-loads/ --samples_output_dir=object_detection/safety-loads/')
+        sys.exit(0)
+
 
     data_dir = FLAGS.data_dir
     annotations_dir = os.path.join(data_dir, 'Annotations')
@@ -45,19 +55,18 @@ def main(_):
 #   print('sample_list size: ', sample_list)
 
     # sample_list to chop full folder name and xml extension
-    copy_list = [x.replace(data_dir+'Annotations/',
+    copy_list = [x.replace(os.path.join(data_dir, 'Annotations/'),
                            '').replace('.xml', '') for x in sample_list]
 
     # print('result: ', copy_list)
 
 
 #    copy to new sample_output_dir
-    sample_output_dir = FLAGS.sample_output_dir
-    os.makedirs(os.path.join(sample_output_dir, 'Annotations'), exist_ok=True)
-    os.makedirs(os.path.join(sample_output_dir,
+    os.makedirs(os.path.join(samples_output_dir, 'Annotations'), exist_ok=True)
+    os.makedirs(os.path.join(samples_output_dir,
                              JPEG_IMAGES_DIR), exist_ok=True)
 
-    jpeg_output_dir = os.path.join(sample_output_dir, JPEG_IMAGES_DIR)
+    jpeg_output_dir = os.path.join(samples_output_dir, JPEG_IMAGES_DIR)
     jpeg_data_dir = os.path.join(data_dir, JPEG_IMAGES_DIR)
 
     # print('jpeg_data_dir,', jpeg_data_dir)
@@ -66,7 +75,7 @@ def main(_):
     for f in copy_list:
         # shutil.copyfile(data_dir+f+'.xml', sample_output_dir+f+'.xml')
         copy_file(os.path.join(data_dir, 'Annotations', f+'.xml'),
-                  os.path.join(sample_output_dir, 'Annotations', f+'.xml'))
+                  os.path.join(samples_output_dir, 'Annotations', f+'.xml'))
 
         copy_file(jpeg_data_dir+f+'.png', jpeg_output_dir+f+'.png')
         copy_file(jpeg_data_dir+f+'.jpeg', jpeg_output_dir+f+'.jpeg')
@@ -80,4 +89,4 @@ def copy_file(source, dest):
 
 
 if __name__ == '__main__':
-    tf.app.run()
+    tf.compat.v1.app.run()

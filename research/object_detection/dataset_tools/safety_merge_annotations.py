@@ -30,8 +30,8 @@ def main(unused_argv):
     dest_dir = FLAGS.annotation_out
 
     if dir1 is None or dir2 is None:
-        tf.logging.warn('Please provides 2 folders for merging')
-        tf.logging.warn('--dir1=dir1 --dir2=dir2')
+        tf.compat.v1.logging.warn('Please provides 2 folders for merging. Output folder is annotation_out by default.')
+        tf.compat.v1.logging.warn('--dir1=dir1 --dir2=dir2')
         sys.exit(0)
 
     dir1_files = glob.glob(os.path.join(dir1,'**', '*.xml'), recursive=True)

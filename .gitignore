@@ -5,6 +5,8 @@ research/object_detection/full-safety-loads/
 research/full-safety-loads/
 research/object_detection/protos/
 research/pycocotools/
+Annotations/
+JPEGImages/
 
 #vscode
 .vscode/
